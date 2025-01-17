@@ -1,29 +1,37 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CalendarView from './CalendarView';
 
 
-function StudentPage({ classData, studentsData, attendanceData }) {
-    const { classNumber } = useParams();
+function StudentPage() {
     const { studentNumber } = useParams();
-    const classItem = classData.find(item => item.number === classNumber);
-    const student = studentsData.find(item => item.number === studentNumber);
 
-    console.log(student);
+    const [student, setStudent] = useState(null);
 
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/api/student/${studentNumber}`)
+            .then(response => response.json())
+            .then(data => setStudent(data))
+            .catch(error => console.error('Error fetching data: ', error));
+    }, [studentNumber])
 
+    if (!student) {
+        return <div>Loading...</div>;
+    }
+
+    console.log("Student:" + student);
 
     return (
         <><div className="header-container">
             <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
             <h1>
-                {student.firstName} {student.lastName}
-                <span className="student-number">{student.number}</span>
+                {student.name} {student.lastName}
+                <span className="student-number">{studentNumber}</span>
             </h1>
         </div>
             <div className="main-body">
-                <CalendarView attendanceData={attendanceData} />
+                <CalendarView/>
         </div></>
     );
 }
