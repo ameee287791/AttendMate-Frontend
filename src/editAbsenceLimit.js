@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 
-const EditAbsenceLimit = ({ absenceLimit }) => {
+const EditAbsenceLimit = ({ absenceLimit, classNumber }) => {
     const [maxAbsences, setMaxAbsences] = useState(absenceLimit);
     const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
     const [newMaxAbsences, setNewMaxAbsences] = useState(maxAbsences);
@@ -11,7 +11,7 @@ const EditAbsenceLimit = ({ absenceLimit }) => {
         setIsEditMenuOpen(true);
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (newMaxAbsences < 0) {
             alert("Please enter a valid number");
             return;
@@ -21,6 +21,26 @@ const EditAbsenceLimit = ({ absenceLimit }) => {
             return;
         }
         setMaxAbsences(newMaxAbsences);
+
+        console.log({
+            subjectNumber: classNumber,
+            absenceLimit: newMaxAbsences,
+        });
+
+        const response = await fetch('http://127.0.0.1:5000/api/class/update-absence-limit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+
+            },
+            body: JSON.stringify({
+                subjectNumber: classNumber,
+                absenceLimit: newMaxAbsences,
+            }),
+        });
+
+        console.log(response);
+
         setIsEditMenuOpen(false);
     }
 
@@ -37,7 +57,7 @@ const EditAbsenceLimit = ({ absenceLimit }) => {
                 </button>
             )}
             {isEditMenuOpen && (
-                <div className="popup">
+                <div className="attendance-popup">
                     <h3>Edit Max Absences</h3>
                     <input
                         type="number"

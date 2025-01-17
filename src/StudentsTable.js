@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-function StudentsTable({ studentsData }) {
+function StudentsTable() {
 
     const { classNumber } = useParams();
+
+    const [students, setStudents] = useState([]);
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/api/students/${classNumber}`)
+            .then(response => response.json())
+            .then(data => setStudents(data))
+            .catch(error => console.error('Error fetching data: ', error));
+    })
 
     const navigate = useNavigate();
 
     const handleTableClick = (studentNumber) => {
         navigate(`/class/${classNumber}/student/${studentNumber}`)
     }
+
 
     return (
         <div className="table-container">
@@ -26,11 +36,11 @@ function StudentsTable({ studentsData }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {studentsData.map(student => (
-                        <tr key={student.id} onClick={() => handleTableClick(student.number) }>
-                            <td>{student.number}</td>
+                    {students.map(student => (
+                        <tr key={student.studentID} onClick={() => handleTableClick(student.studentNumber) }>
+                            <td>{student.studentNumber}</td>
                             <td>{student.lastName}</td>
-                            <td>{student.firstName}</td>
+                            <td>{student.name}</td>
                             <td className="absence">{student.absences}</td>
                             <td className="student-arrow">&#129146;</td>
                         </tr>

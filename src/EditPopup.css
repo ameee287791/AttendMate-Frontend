@@ -1,0 +1,13 @@
+.calendar-edit-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 10px;
+    max-width: 200px;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 10;
+    padding: 20px 40px;
+}

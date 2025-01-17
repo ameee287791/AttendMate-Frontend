@@ -1,19 +1,29 @@
 
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import ClassCard from './ClassCard';
-function HomePage({ classData }) {
+function HomePage() {
+
+    const [classes, setClasses] = useState([]);
+
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/api/classes')
+            .then(response => response.json())
+            .then(data => setClasses(data))
+            .catch(error => console.error('Error fetching data: ', error));
+    })
+
+    //console.log("Classes: " +   classes);
 
     return (
         <div className="App">
             <h1>My Classes</h1>
             <div className="class-list">
-                {classData.map(cls => (
+                {classes.map(cls => (
                     <ClassCard
-                        key={cls.id}
-                        name={cls.name}
-                        type={cls.type}
-                        number={cls.number}
+                        key={cls.classID}
+                        name={cls.subjectName}
+                        type={cls.subjectType}
+                        number={cls.subjectNumber}
                     />
                 ))}
             </div>

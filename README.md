@@ -1,3 +1,5 @@
+I edited the Schema to test things in the front end. The new schema is called schema-used-for-frontend.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
