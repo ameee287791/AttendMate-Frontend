@@ -1,4 +1,4 @@
-I edited the Schema to test things in the front end. The new schema is called schema-used-for-frontend.
+I edited the Schema to test things in the front end. The new schema is called schema-used-for-frontend. You might have to rename it back to schema.sql and move it in the correct folder for this to work.
 
 # Getting Started with Create React App
 
