@@ -1,0 +1,16 @@
+.calculated-statistics {
+    line-height: 200%;
+    display: block;
+    margin-left: 40px;
+}
+
+.title {
+    padding-left: 40px;
+    font-size: 130%;
+}
+
+.class-info {
+    display: block;
+    margin-left: 40px;
+}
+

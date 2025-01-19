@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta
 import mysql.connector
 
 app = Flask(__name__)
@@ -14,6 +14,40 @@ def get_db_connection():
         database='AttendMate'
     )
     return connection
+
+@app.route('/api/debug/<date_input>', methods=['GET'])
+def debug(date_input):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("""SELECT classID, studentID FROM attendanceRecords WHERE attendanceRecords.date = %s"""
+                    ,(date_input,))
+    results = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+    return results
+
+@app.route('/api/attendance', methods=['GET'])
+def get_attendance():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    date_format = '%d.%m.%YT%H:%i'
+    cursor.execute("""SELECT DATE_FORMAT(CONCAT(attendanceRecords.date, ' ', attendanceRecords.time), %s)  as formattedDate,
+                    class.subjectName, student.studentNumber, attendanceRecords.status, attendanceRecords.date
+                    FROM attendanceRecords
+                    JOIN class ON class.classID = attendanceRecords.classID
+                    JOIN student ON student.studentID = attendanceRecords.studentID""", (date_format,))
+    results = cursor.fetchall()
+
+    for row in results:
+        if isinstance(row['date'], datetime):
+            row['date'] = row['date'].strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(row['date'], timedelta):
+            row['date'] = str(row['date'])
+
+    cursor.close()
+    connection.close()
+    return results
 
 @app.route('/api/classes', methods=['GET'])
 def get_classes():
@@ -65,9 +99,17 @@ def get_class_by_number(subject_number):
     print(f"ClassPage: Received subject_number: {subject_number}")
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("""SELECT classID, subjectName, subjectType, absenceLimit
-                   FROM class WHERE subjectNumber = %s""", (subject_number,))
+    cursor.execute("""
+        SELECT classID, subjectName, subjectType, absenceLimit,
+        year, semester, room, day, time
+        FROM class WHERE subjectNumber = %s""", (subject_number,))
     result = cursor.fetchone()
+
+    if isinstance(result['day'], datetime):
+        result['day'] = result['day'].strftime('%Y-%m-%d %H:%M:%S')
+    elif isinstance(result['time'], timedelta):
+            result['time'] = str(result['time'])
+
     cursor.close()
     connection.close()
     return jsonify(result)
@@ -90,7 +132,7 @@ def get_student_by_number(student_number):
 def get_attendance_by_class_and_student(subject_number, student_number):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    date_format = '%d.%m.%YT%H:%i:%s'
+    date_format = '%d.%m.%YT%H:%i'
     cursor.execute("""SELECT DATE_FORMAT(CONCAT(attendanceRecords.date, ' ', attendanceRecords.time), %s)  as date, attendanceStatus.status as status
                    FROM attendanceRecords JOIN attendanceStatus
                    ON attendanceRecords.status = attendanceStatus.attendanceID
@@ -102,6 +144,59 @@ def get_attendance_by_class_and_student(subject_number, student_number):
     cursor.close()
     connection.close()
     return jsonify(results)
+
+@app.route('/api/class/<subject_number>/student/<student_number>/statistics', methods=['GET'])
+def get_late_time(subject_number, student_number):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    # total late time in seconds
+    # exclude negative times from the addition (if student was too early)
+    cursor.execute("""
+        SELECT SUM(
+            CASE 
+                WHEN TIME_TO_SEC(SUBTIME(attendanceRecords.time, class.time)) >= 0 
+                THEN TIME_TO_SEC(SUBTIME(attendanceRecords.time, class.time))
+                ELSE 0
+            END
+        ) AS lateTime
+        FROM attendanceRecords
+        JOIN class ON class.classID = attendanceRecords.classID
+        JOIN student ON student.studentID = attendanceRecords.studentID
+        JOIN attendanceStatus ON attendanceStatus.attendanceID = attendanceRecords.status
+        WHERE class.subjectNumber = %s AND student.studentNumber = %s
+        AND attendanceStatus.status = %s
+    """, (subject_number, student_number, 'late'))
+    late_time = cursor.fetchone()
+
+
+    cursor.execute("""
+        SELECT 
+            COUNT(CASE WHEN attendanceStatus.status IN ('late', 'present') THEN 1 END) AS timesInClass,
+            COUNT(CASE WHEN attendanceStatus.status = 'late' THEN 1 END) AS timesLate,
+            COUNT(CASE WHEN attendanceStatus.status IN ('absent', 'excused') THEN 1 END) AS missedClasses,
+            COUNT(CASE WHEN attendanceStatus.status = 'absent' THEN 1 END) As timesUnexcused
+        FROM attendanceRecords
+        JOIN class ON class.classID = attendanceRecords.classID
+        JOIN student ON student.studentID = attendanceRecords.studentID
+        JOIN attendanceStatus 
+        ON attendanceStatus.attendanceID = attendanceRecords.status
+        WHERE class.subjectNumber = %s AND student.studentNumber = %s
+        """, (subject_number, student_number,))
+    attendance_times = cursor.fetchone()
+
+    result = {
+        'lateTime': late_time['lateTime'],
+        'timesInClass': attendance_times['timesInClass'],
+        'timesLate': attendance_times['timesLate'],
+        'missedClasses': attendance_times['missedClasses'],
+        'timesUnexcused': attendance_times['timesUnexcused']
+    }
+
+    cursor.close()
+    connection.close()
+    return jsonify(result)
+    
 
 #'http://127.0.0.1:5000/api/class/update-absence-limit
 @app.route('/api/class/update-absence-limit', methods=['POST'])
@@ -137,7 +232,12 @@ def update_attendance():
     subject_number = data['subjectNumber']
     student_number = data ['studentNumber']
     status = data['status']
+    time = data['time']
     date = data['date']
+
+    if(status == 'none'):
+        return jsonify({"message": "update-attendance called but delete-attendance-record should have been called instead"}), 500
+    
 
     if not subject_number or not student_number or status is None:
         return jsonify({"message": "subjectNumber, studentNumber and status are required"}), 400
@@ -149,40 +249,88 @@ def update_attendance():
     date_obj = datetime.strptime(date, '%d.%m.%Y')
     formatted_date = date_obj.strftime('%Y-%m-%d')
 
+    print(formatted_date)
+
+    # check if row for this class, student and day already exists
     cursor.execute("""
-        UPDATE attendanceRecords
+        SELECT * FROM attendanceRecords
         JOIN class ON attendanceRecords.classID = class.classID
         JOIN student ON attendanceRecords.studentID = student.studentID
-        SET status = (
-            SELECT attendanceID
-            FROM attendanceStatus
-            WHERE attendanceStatus.status = %s
-        )
-        WHERE student.studentNumber = %s 
-        AND class.subjectNumber = %s
-        AND attendanceRecords.date = %s
-    """, (status, student_number, subject_number, formatted_date))
-
-    if cursor.rowcount == 0: # no rows updated
-        cursor.execute("""
-        INSERT INTO attendanceRecords (classID, studentID, date, time, status)
-        SELECT class.classID, student.studentID, %s, %s, attendanceStatus.attendanceID
-        FROM class JOIN attendanceRecords
-        ON class.classID = attendanceRecords.classID
-        JOIN student 
-        ON student.studentID = attendanceRecords.studentID
-        JOIN attendanceStatus ON attendanceStatus.attendanceID = attendanceRecords.status
         WHERE class.subjectNumber = %s
         AND student.studentNumber = %s
-        AND attendanceStatus.status = %s
-        """, (formatted_date, '13:05:04', subject_number, student_number, status))
+        AND attendanceRecords.date = %s
+    """, (subject_number, student_number, formatted_date))
+    rows = cursor.fetchall()
+    duplicates_found = False
+    if len(rows) > 1:
+        duplicates_found = True
+
+    if len(rows) == 1: # update row
+        cursor.execute("""
+            UPDATE attendanceRecords
+            JOIN class ON attendanceRecords.classID = class.classID
+            JOIN student ON attendanceRecords.studentID = student.studentID
+            JOIN attendanceStatus ON attendanceStatus.status = %s
+            SET attendanceRecords.status = attendanceStatus.attendanceID,
+                attendanceRecords.time = %s
+            WHERE student.studentNumber = %s 
+            AND class.subjectNumber = %s
+            AND attendanceRecords.date = %s
+        """, (status, time, student_number, subject_number, formatted_date))
+
+    else: # create new entry
+        cursor.execute("""
+        INSERT INTO attendanceRecords (classID, studentID, date, time, status)
+        VALUES (
+        (SELECT class.classID from class WHERE class.subjectNumber = %s),
+        (SELECT student.studentID from student WHERE student.studentNumber = %s),
+        %s,
+        %s,
+        (SELECT attendanceStatus.attendanceID from attendanceStatus 
+            WHERE attendanceStatus.status = %s)
+        )
+        """, (subject_number, student_number, formatted_date, time, status))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"message": "Failed to add row"}), 500
+            
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    if duplicates_found:
+        return jsonify({"message": "Duplicate entry in database"}), 409
+
+    return jsonify({"message": "Status updated successfully"}), 200
+
+@app.route('/api/delete-attendance-record', methods=['POST'])
+def delete_attendance_record():
+    data = request.get_json()
+    subject_number = data['subjectNumber']
+    student_number = data['studentNumber']
+    date = data['date']
+
+    date_obj = datetime.strptime(date, '%d.%m.%Y')
+    formatted_date = date_obj.strftime('%Y-%m-%d')
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        DELETE attendanceRecords FROM attendanceRecords
+        JOIN class ON attendanceRecords.classID = class.classID
+        JOIN student ON student.studentID = attendanceRecords.studentID
+        WHERE student.studentNumber = %s 
+        AND class.subjectNumber = %s 
+        AND date = %s
+    """, (student_number, subject_number, formatted_date))
 
     connection.commit()
     cursor.close()
     connection.close()
 
     return jsonify({"message": "Status updated successfully"}), 200
-
 
 if __name__ == '__main__':
     app.run(debug=True)

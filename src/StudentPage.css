@@ -25,4 +25,35 @@ h1 {
 
 .main-body {
     padding-left: 45px;
+    padding-right: 45px;
+}
+
+.legend-container {
+    display: flex;
+    gap: 15px;
+    border: 1px solid #000 ;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.legend-cube {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin: 10px;
+    margin-left: 30px;
+}
+
+.stats-container {
+    flex: 1; /* fills the remaining space */
+    border: 1px solid #000;
+    border-radius: 8px;
+}
+
+.calendar-container {
+}
+
+.lower-body {
+    display: flex;
+    gap: 15px;
 }

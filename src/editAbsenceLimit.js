@@ -1,8 +1,7 @@
 
 import React, { useState } from 'react';
 
-const EditAbsenceLimit = ({ absenceLimit, classNumber }) => {
-    const [maxAbsences, setMaxAbsences] = useState(absenceLimit);
+const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
     const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
     const [newMaxAbsences, setNewMaxAbsences] = useState(maxAbsences);
 
@@ -46,6 +45,10 @@ const EditAbsenceLimit = ({ absenceLimit, classNumber }) => {
 
     const handleCancel = () => {
         setIsEditMenuOpen(false);
+    }
+
+    if (maxAbsences == null) {
+        return <div>Loading...</div>;
     }
 
     return (
