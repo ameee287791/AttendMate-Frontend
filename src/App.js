@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ClassPage from './ClassPage';
 import HomePage from './HomePage';
 import StudentPage from './StudentPage';
-import TestPage from './TestPage';
 import './HomePage.css';
 import './ClassPage.css';
 import './StudentPage.css';
