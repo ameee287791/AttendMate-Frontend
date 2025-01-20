@@ -1,4 +1,19 @@
-I edited the Schema to test things in the front end. The new schema is called schema-used-for-frontend. You might have to rename it back to schema.sql and move it in the correct folder for this to work.
+# How to start the Frontend
+Replace the schema.sql in the backend (AttendMate-Backend/db/AttendMateDB/schema.sql) with the schema.sql from this repo. (This adds 2 columns to class table and a bunch of dummy data).
+Open Docker Desktop.
+In a terminal, navigate to .../AttendMate-Backend/db/AttendMateDB and run 
+### `docker compose up`
+Navigate to .../AttendMate-Frontend/flask and start app.py.
+In a terminal, navigate to AttendMate-Frontend and run
+### `npm start`
+
+If you made changes to the schema.sql, run
+### `docker compose down -v`
+### `docker compose up -d --build --force-recreate`
+
+app.py will likely run into an error, because it couldn't connect to the database, restart app.py.
+
+
 
 # Getting Started with Create React App
 
