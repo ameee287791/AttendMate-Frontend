@@ -73,7 +73,7 @@ const translations = {
         time: "Czas",
         totalLateTime: "Suma Nieobecności",
         timesLate: "Liczba Spóźnień",
-        averageAttended: "Średnie Spóźnienia na Obecności",
+        averageAttended: "Średnie Spóźnienie na Obecności",
         averageLate: "Średnie Spóźnienie",
         totalMissed: "Suma Nieobecności",
         totalUnexcused: "Suma Nieusprawiedliwień",
