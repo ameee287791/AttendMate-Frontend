@@ -55,5 +55,6 @@ h1 {
 
 .lower-body {
     display: flex;
+    align-items: stretch;
     gap: 15px;
 }

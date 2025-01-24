@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import StudentsTable from './StudentsTable';
 import EditAbsenceLimit from './editAbsenceLimit';
-
+import Header from './Header';
+import { useLanguage } from './LanguageContext';
 
 function ClassPage() {
     const { classNumber } = useParams();
+    const { t } = useLanguage();
 
     const [maxAbsences, setMaxAbsences] = useState(null); // this is here instead of in editAbsenceLimit.js so StudentsTable.js can read it
 
@@ -33,14 +35,15 @@ function ClassPage() {
 
     return (
         <div>
+            <Header />
             <div className="header-container">
                 <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
                 <h1>
                     {classItem.subjectName}
-                    <span className="class-type">{classItem.subjectType}</span>
+                    <span className="class-type">{t(classItem.subjectType)}</span>
                 </h1>
             </div>
-            <EditAbsenceLimit maxAbsences={maxAbsences} setMaxAbsences={setMaxAbsences} classNumber={classNumber } />
+            <EditAbsenceLimit maxAbsences={maxAbsences} setMaxAbsences={setMaxAbsences} classNumber={classNumber} />
             <StudentsTable maxAbsences={maxAbsences} />
         </div>
     );

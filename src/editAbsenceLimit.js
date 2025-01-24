@@ -1,7 +1,10 @@
 
 import React, { useState } from 'react';
+import { useLanguage } from './LanguageContext';
 
 const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
+    const { t } = useLanguage();
+
     const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
     const [newMaxAbsences, setNewMaxAbsences] = useState(maxAbsences);
 
@@ -56,12 +59,12 @@ const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
             {!isEditMenuOpen && (
 
                 <button className="attendance-limit-button" onClick={() => handleEditClick()}>
-                    Absence Limit: {maxAbsences} &#x1F589;
+                    {t('absenceLimit')}: {maxAbsences} &#x1F589;
                 </button>
             )}
             {isEditMenuOpen && (
                 <div className="attendance-popup">
-                    <h3>Edit Max Absences</h3>
+                    <h3>{ t('editAbsenceLimit')}</h3>
                     <input
                         type="number"
                         value={newMaxAbsences}
@@ -75,8 +78,8 @@ const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
                         }}
                     />
                     <div>
-                        <button onClick={handleSave}>Save</button>
-                        <button onClick={handleCancel}>Cancel</button>
+                        <button onClick={handleSave}>{t('save')}</button>
+                        <button onClick={handleCancel}>{t('cancel')}</button>
                     </div>
                 </div>
             )}

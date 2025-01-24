@@ -4,6 +4,7 @@
 
 .react-calendar {
     width: 600px;
+    height: 100%;
     max-width: 100%;
     background: white;
     border: 1px solid #000;
@@ -43,7 +44,7 @@
     }
 
         .react-calendar button:enabled:hover {
-/*            cursor: pointer;*/
+            cursor: pointer;
         }
 
 .react-calendar__navigation {

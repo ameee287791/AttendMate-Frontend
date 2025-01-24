@@ -4,6 +4,8 @@ import Calendar from 'react-calendar';
 import './CalendarView.css';
 import './Calendar.css';
 import './EditPopup.css';
+import { useLanguage } from './LanguageContext';
+
 
 // we assume that for each class, student and day only one attendance record can exist
 // there cannot be multiple at different times f.ex. SoftwareEngineering, Max Muster, 14.01. 13:00
@@ -12,6 +14,8 @@ import './EditPopup.css';
 // date format in frontend: 09.01.2025, dd.mm.yyyy
 // date format in database: 2025-01-09, yyyy-mm-dd
 function CalendarView({ setRecalculateStats }) {
+    const { t } = useLanguage();
+
     const [date, setDate] = useState(new Date());
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [attendance, setAttendance] = useState(new Map()); // map for faster lookup times
@@ -157,26 +161,26 @@ function CalendarView({ setRecalculateStats }) {
 
 
     return (
-        <div>
+        <div className="outer-div">
             {isPopupOpen && (
                 <div className="calendar-edit-popup">
                     <h3>{dateStr}</h3>
                     <label className="status-container">
-                        <span>Status:</span>
+                        <span>{t('status')}:</span>
                         <select
                             value={status}
                             onChange={(e) => setStatus(e.target.value)}
                         >
-                            <option value="none">none</option>
-                            <option value="present">present</option>
-                            <option value="late">late</option>
-                            <option value="absent">absent</option>
-                            <option value="excused">excused</option>
+                            <option value="none">{t('none')}</option>
+                            <option value="present">{t('present')}</option>
+                            <option value="late">{t('late')}</option>
+                            <option value="absent">{t('absent')}</option>
+                            <option value="excused">{t('excused')}</option>
                         </select>
 
                     </label>
                     <div className="time-container">
-                        <p>Time: </p>
+                        <p>{t('time')}: </p>
                         <input
                             type="number"
                             value={hours}
@@ -199,8 +203,8 @@ function CalendarView({ setRecalculateStats }) {
                         />
                     </div>
                     <div className="button-container">
-                        <button onClick={handleSave}>Save</button>
-                        <button onClick={handleCancel}>Cancel</button>
+                        <button onClick={handleSave}>{t('save')}</button>
+                        <button onClick={handleCancel}>{t('cancel')}</button>
                     </div>
                 </div>
             )}

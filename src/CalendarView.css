@@ -30,3 +30,7 @@
     align-items: center;
     gap: 5px;
 }
+
+.outer-div {
+    height: 100%;
+}

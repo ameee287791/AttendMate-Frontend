@@ -3,8 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CalendarView from './CalendarView';
 import Statistics from './Statistics';
+import Header from './Header';
+import { useLanguage } from './LanguageContext';
 
 function StudentPage() {
+
+    const { t } = useLanguage();
     const { studentNumber } = useParams();
 
     const [student, setStudent] = useState(null);
@@ -25,6 +29,7 @@ function StudentPage() {
 
     return (
         <><div className="header-container">
+        <Header/>
             <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
             <h1>
                 {student.name} {student.lastName}
@@ -34,13 +39,13 @@ function StudentPage() {
             <div className="main-body">
                 <div className="legend-container">
                     <div className="legend-cube" style={{ backgroundColor: '#4CAF50' }} />
-                    <p>Present</p>
+                    <p>{t('present')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#FF9800' }} />
-                    <p>Late</p>
+                    <p>{t('late')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#F44336' }} />
-                    <p>Absent</p>
+                    <p>{t('absent')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#4856D4' }} />
-                    <p>Excused</p>
+                    <p>{t('excused')}</p>
                 </div>
                 <div className="lower-body">
                     <div className="calendar-container">
