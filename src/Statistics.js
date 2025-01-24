@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './Statistics.css';
+import { useLanguage } from './LanguageContext';
 
 function Statistics({ recalculateStats, setRecalculateStats }) {
 
+    const { t } = useLanguage();
     const { classNumber, studentNumber } = useParams();
     const [lateTime, setLateTime] = useState(0);
     const [timesInClass, setTimesInClass] = useState(0);
@@ -62,28 +64,31 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
 
     return (
         <div>
-            <p className="title"><b> {classItem.subjectName} - Statistics: </b></p>
-            <p>
-                <span className="class-info">
-                    Year: {classItem.year}<br />
-                    Semester: {classItem.semester}<br />
-                    Room: {classItem.room}<br />
-                    Day: {classItem.day}<br />
-                    Time: {classItem.time}
-                </span>
-                <hr className="line" />
-                <span className="calculated-statistics">
-                    Total Late Time: {convertSecondsToTime(lateTime)}<br />
-                    Times Student was late: {timesLate}<br />
-                    Average Late Time over attended Classes: {lateTimeOverClasses}<br />
-                    Average Late Time over late Classes: {lateTimeOverLateClasses}<br />
-                    Total Missed Classes: {missedClasses}<br />
-                    <span style={{ color: timesUnexcused > classItem.absenceLimit ? 'red' : 'black' }}>
-                        Total Unexcused Absences: {timesUnexcused} (out of {classItem.absenceLimit} allowed)
+            <p className="title"><b>{classItem.subjectName} - {t('statistics')}:</b></p>
+            <div className="statistics-container">
+                <div className="class-info">
+                    <p>
+                        {t('year')}: {classItem.year}<br/>
+                        {t('semester')}: {classItem.semester}<br />
+                        {t('room')}: {classItem.room}<br />
+                        {t('day')}: {t(classItem.day)} <br />
+                        {t('time')}: {classItem.time}<br />
+                    </p>
+                </div>
+                <div className="calculated-statistics">
+                    <p>{t('totalLateTime')}: {convertSecondsToTime(lateTime)}</p>
+                    <p>{t('timesLate')}: {timesLate}</p>
+                    <p>{t('averageAttended')}: {lateTimeOverClasses}</p>
+                    <p>{t('averageLate')}: {lateTimeOverLateClasses}</p>
+                    <p>{t('totalMissed')}: {missedClasses}</p>
+                    <span style={{ color: timesUnexcused > classItem.absenceLimit ? 'red' : 'green' }}>
+                        {t('totalUnexcused')}: {timesUnexcused} ({t('outOfMax1')} {classItem.absenceLimit} {t('outOfMax2')})
                     </span>
-                </span>
-            </p>
+                </div>
+            </div>
         </div>
+
+
     )
 }
 

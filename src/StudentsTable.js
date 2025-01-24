@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
 
 
 function StudentsTable({ maxAbsences }) {
 
+    const { t } = useLanguage();
     const { classNumber } = useParams();
 
     const [students, setStudents] = useState([]);
@@ -27,10 +29,10 @@ function StudentsTable({ maxAbsences }) {
             <table>
                 <thead>
                     <tr>
-                        <th>Number</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Absences</th>
+                        <th>{t('number')}</th>
+                        <th>{t('lastName')}</th>
+                        <th>{t('firstName')}</th>
+                        <th>{t('absences')}</th>
                         <th></th>
                     </tr>
                 </thead>
