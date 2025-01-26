@@ -2,13 +2,26 @@ import React, { useState, useEffect } from 'react';
 import ClassPage from './ClassPage';
 import HomePage from './HomePage';
 import StudentPage from './StudentPage';
-import LoginPage from './LoginPage'; // Create a separate LoginPage component
+import LoginPage from './LoginPage'; 
 import './HomePage.css';
 import './ClassPage.css';
 import './StudentPage.css';
 import './StudentsTable.css';
 import './editAbsenceLimit.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Register from './Register';
+
+function TopBar() {
+    return (
+        <div className="top-bar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    );
+}
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +35,8 @@ function App() {
 
     return (
         <Router>
+            {isAuthenticated && <TopBar />} {/* Conditionally render the TopBar */}
+
             <Routes>
                 <Route
                     path="/"
@@ -32,6 +47,8 @@ function App() {
                     path="/class/:classNumber/student/:studentNumber"
                     element={<StudentPage />}
                 />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<Register />} />
             </Routes>
         </Router>
     );
