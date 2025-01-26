@@ -13,7 +13,7 @@ function HomePage() {
             .then(response => response.json())
             .then(data => setClasses(data))
             .catch(error => console.error('Error fetching data: ', error));
-    })
+    }, [])
 
     //console.log("Classes: " +   classes);
 
