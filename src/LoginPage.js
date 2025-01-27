@@ -39,6 +39,7 @@ const Login = () => {
         setToken('');
         setIsAuthenticated(false);
         localStorage.removeItem('token');
+        window.location.href = '/';
     }
 
     if(isAuthenticated){
@@ -71,7 +72,7 @@ const Login = () => {
                     Don't have an account? <a href="/register">Register</a>
                 </div>
                 <div>
-                    try login with email: aliicejohnson@example.com 
+                    try login with email: alicejohnson@example.com 
                     and password: student
                 </div>
             </div>

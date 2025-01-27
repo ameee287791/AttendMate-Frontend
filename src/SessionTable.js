@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
-import './SessionTable.css'; 
+import './SessionTable.css';
 
 const SessionTable = () => {
     const [tableData, setTableData] = useState(null);
@@ -45,6 +44,28 @@ const SessionTable = () => {
     const columns = Object.keys(tableData);
     const rows = Object.keys(tableData[columns[0]]);
 
+    // Function to format the date without the year
+    const formatDate = (timestamp) => {
+        const date = new Date(parseInt(timestamp, 10));
+        return date.toLocaleDateString("en", { month: 'short', day: 'numeric' });
+    };
+
+    // Function to get the first letter of the value and determine the row color
+    const getValueAndColor = (value) => {
+        if (!value) return { displayValue: 'N/A', color: 'transparent' };
+        const firstLetter = value.charAt(0).toUpperCase();
+        switch (firstLetter) {
+            case 'A':
+                return { displayValue: 'A', color: 'red' };
+            case 'P':
+                return { displayValue: 'P', color: 'green' };
+            case 'E':
+                return { displayValue: 'E', color: 'yellow' };
+            default:
+                return { displayValue: firstLetter, color: 'transparent' };
+        }
+    };
+    
     return (
         <div className="session-table-container">
             <h2>{t('sessionTable')}</h2>
@@ -53,25 +74,40 @@ const SessionTable = () => {
                     <tr>
                         <th>{t('number')}</th>
                         {columns.map((col) => (
-                            <th key={col}>{new Date(parseInt(col, 10)).toLocaleDateString()}</th>
+                            <th key={col}>{formatDate(col)}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map((row) => (
-                        <tr key={row}>
-                            <td>{row}</td>
-                            {columns.map((col) => (
-                                <td key={`${row}-${col}`}>
-                                    {tableData[col][row] || 'N/A'}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                    {rows.map((row) => {
+                        const rowValues = columns.map((col) =>
+                            getValueAndColor(tableData[col]?.[row])
+                        );
+    
+                        // Determine row color priority: red > yellow > green
+                        const rowColor = rowValues.find((val) => val.color === 'red')
+                            ? 'red'
+                            : rowValues.find((val) => val.color === 'yellow')
+                            ? 'yellow'
+                            : 'green';
+    
+                        return (
+                            <tr key={row} style={{ backgroundColor: rowColor }}>
+                                <td>{row}</td>
+                                {rowValues.map((val, index) => (
+                                    <td
+                                        key={`${row}-${columns[index]}`}
+                                        style={{ backgroundColor: val.color }}
+                                    >
+                                        {val.displayValue}
+                                    </td>
+                                ))}
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
     );
 };
-
 export default SessionTable;
