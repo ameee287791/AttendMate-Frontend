@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import CalendarView from './CalendarView';
 import Statistics from './Statistics';
 import Header from './Header';
@@ -9,9 +9,12 @@ import { useLanguage } from './LanguageContext';
 function StudentPage() {
 
     const { t } = useLanguage();
-    const { studentNumber } = useParams();
+    const { classNumber, studentNumber } = useParams();
+    const location = useLocation();
+    const userIsProfessor = location.state?.userIsProfessor;
 
     const [student, setStudent] = useState(null);
+    const [classItem, setClassItem] = useState(null);
     const [recalculateStats, setRecalculateStats] = useState(false);
 
     useEffect(() => {
@@ -21,7 +24,14 @@ function StudentPage() {
             .catch(error => console.error('Error fetching data: ', error));
     }, [studentNumber])
 
-    if (!student) {
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/api/class/${classNumber}`)
+            .then(response => response.json())
+            .then(data => setClassItem(data))
+            .catch(error => console.error('Error fetching data: ', error));
+    }, [classNumber])
+
+    if (!student || !classItem) {
         return <div>Loading...</div>;
     }
 
@@ -31,10 +41,20 @@ function StudentPage() {
         <><div className="header-container">
         <Header/>
             <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
-            <h1>
-                {student.name} {student.lastName}
-                <span className="student-number">{studentNumber}</span>
-            </h1>
+
+            {userIsProfessor && (
+                <h1>
+                    {student.name} {student.lastName}
+                    <span className="student-number">{studentNumber}</span>
+                </h1>
+            )}
+
+            {!userIsProfessor && (
+                <h1>
+                    {classItem.subjectName}
+                    <span className="student-number">{classNumber}</span>
+                </h1>
+            )}
         </div>
             <div className="main-body">
                 <div className="legend-container">
@@ -49,7 +69,7 @@ function StudentPage() {
                 </div>
                 <div className="lower-body">
                     <div className="calendar-container">
-                        <CalendarView setRecalculateStats={setRecalculateStats} />
+                        <CalendarView setRecalculateStats={setRecalculateStats} userIsProfessor={ userIsProfessor } />
                     </div>
                     <div className="stats-container">
                         <Statistics recalculateStats={recalculateStats} setRecalculateStats={setRecalculateStats} />

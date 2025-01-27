@@ -13,7 +13,7 @@ import { useLanguage } from './LanguageContext';
 
 // date format in frontend: 09.01.2025, dd.mm.yyyy
 // date format in database: 2025-01-09, yyyy-mm-dd
-function CalendarView({ setRecalculateStats }) {
+function CalendarView({ setRecalculateStats, userIsProfessor }) {
     const { t } = useLanguage();
 
     const [date, setDate] = useState(new Date());
@@ -41,7 +41,7 @@ function CalendarView({ setRecalculateStats }) {
             .catch(error => console.error('Error fetching data: ', error));
     }, [classNumber, studentNumber]);
 
-
+    // opens edit panel for given date
     const handleTileClick = (selectedDate) => {
         const dateStr = selectedDate.toLocaleDateString('pl-PL').split('T')[0];
         const [day, month, year] = dateStr.split('.');
@@ -70,6 +70,7 @@ function CalendarView({ setRecalculateStats }) {
 
     };
 
+    // saves changes, closes edit panel
     const handleSave = async () => {
 
         console.log("attendance: ")
@@ -162,7 +163,7 @@ function CalendarView({ setRecalculateStats }) {
 
     return (
         <div className="outer-div">
-            {isPopupOpen && (
+            {isPopupOpen && userIsProfessor && (
                 <div className="calendar-edit-popup">
                     <h3>{dateStr}</h3>
                     <label className="status-container">
@@ -205,6 +206,33 @@ function CalendarView({ setRecalculateStats }) {
                     <div className="button-container">
                         <button onClick={handleSave}>{t('save')}</button>
                         <button onClick={handleCancel}>{t('cancel')}</button>
+                    </div>
+                </div>
+            )}
+
+            {isPopupOpen && !userIsProfessor && (
+                <div className="calendar-edit-popup">
+                    <h3>{dateStr}</h3>
+                    <label className="status-container">
+                        <span>{t('status')}: {t( status )}</span>
+                    </label>
+                    <div className="button-container" style={{ paddingTop: "15px" }}>
+                        <button onClick={handleCancel}>{t('close')}</button>
+                    </div>
+                </div>
+            )}
+
+            {isPopupOpen && !userIsProfessor && status === 'late' && (
+                <div className="calendar-edit-popup">
+                    <h3>{dateStr}</h3>
+                    <label className="status-container">
+                        <span>{t('status')}: {t(status)}</span>
+                    </label>
+                    <div className="time-container">
+                        <p>{t('time')}: {hours}:{minutes} </p>
+                    </div>
+                    <div className="button-container">
+                        <button onClick={handleCancel}>{t('close')}</button>
                     </div>
                 </div>
             )}

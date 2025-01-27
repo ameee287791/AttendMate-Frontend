@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ClassPage from './ClassPage';
 import HomePage from './HomePage';
 import StudentPage from './StudentPage';
+import StudentHomepage from './StudentHomepage';
 import './HomePage.css';
 import './ClassPage.css';
 import './StudentPage.css';
@@ -21,6 +22,7 @@ function App() {
                     path="/class/:classNumber/student/:studentNumber"
                     element={<StudentPage />}
                 />
+                <Route path="/studentview" element={<StudentHomepage/> } />
             </Routes>
         </Router>
     );

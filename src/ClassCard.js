@@ -4,13 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
 
 
-function ClassCard({ name, number, type, onClick }) {
+function ClassCard({ name, number, type, userIsProfessor }) {
 
     const { t } = useLanguage();
     const navigate = useNavigate();
 
     const handleCardClick = (classNumber) => {
-        navigate(`/class/${classNumber}`);
+        if (userIsProfessor) {
+            navigate(`/class/${classNumber}`);
+        } else {
+            // studentNumber should be gained from login data
+            // dummy data for testing
+            navigate(`/class/${classNumber}/student/20230003`, {
+                state: { userIsProfessor },
+            });
+        }
     };
 
 

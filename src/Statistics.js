@@ -39,6 +39,7 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
     }
 
     const convertSecondsToTime = (seconds) => {
+        seconds = Math.round(seconds);
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;

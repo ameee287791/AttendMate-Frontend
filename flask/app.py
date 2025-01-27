@@ -27,6 +27,7 @@ def debug(date_input):
     connection.close()
     return results
 
+# returns attendance records (datetime string, subject name, student number, status, date)
 @app.route('/api/attendance', methods=['GET'])
 def get_attendance():
     connection = get_db_connection()
@@ -49,6 +50,7 @@ def get_attendance():
     connection.close()
     return results
 
+# returns classes (id, name, type, number)
 @app.route('/api/classes', methods=['GET'])
 def get_classes():
     connection = get_db_connection()
@@ -59,6 +61,22 @@ def get_classes():
     connection.close()
     return jsonify(results)
 
+@app.route('/api/classes/<student_number>', methods=['GET'])
+def get_classes_by_student(student_number):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT class.classID, subjectName, subjectType, subjectNumber FROM class
+        JOIN studentsInClasses ON studentsInClasses.classID = class.classID
+        JOIN student ON student.studentID = studentsInClasses.studentID
+        WHERE student.studentNumber = %s
+    """, (student_number,))
+    results = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return jsonify(results)
+
+# returns students from a specific class (student number, id, name, last name, num of absences)
 @app.route('/api/students/<subject_number>', methods=['GET'])
 def get_students_by_class(subject_number):
     connection = get_db_connection()
@@ -94,6 +112,8 @@ def get_students_by_class(subject_number):
     connection.close()
     return jsonify(results)
 
+    
+# returns class by subject number (id, name, type, absence limit, year, semester, room, day, time)
 @app.route('/api/class/<subject_number>', methods=['GET'])
 def get_class_by_number(subject_number):
     print(f"ClassPage: Received subject_number: {subject_number}")
@@ -114,6 +134,7 @@ def get_class_by_number(subject_number):
     connection.close()
     return jsonify(result)
 
+# returns student by number (name, last name)
 @app.route('/api/student/<student_number>', methods=['GET'])
 def get_student_by_number(student_number):
     connection = get_db_connection()
@@ -128,6 +149,7 @@ def get_student_by_number(student_number):
         return jsonify({"error": "Student not found"}), 404
     return jsonify(result)
 
+# returns attendances by class and student (datetime string, status)
 @app.route('/api/class/<subject_number>/student/<student_number>/attendance', methods=['GET'])
 def get_attendance_by_class_and_student(subject_number, student_number):
     connection = get_db_connection()
@@ -145,6 +167,7 @@ def get_attendance_by_class_and_student(subject_number, student_number):
     connection.close()
     return jsonify(results)
 
+# returns statistics (late time, times in class, times late, times missed class, times unexcused)
 @app.route('/api/class/<subject_number>/student/<student_number>/statistics', methods=['GET'])
 def get_late_time(subject_number, student_number):
     connection = get_db_connection()
@@ -197,7 +220,7 @@ def get_late_time(subject_number, student_number):
     connection.close()
     return jsonify(result)
     
-
+# updates absence limit (input: subject number, absence limit)
 #'http://127.0.0.1:5000/api/class/update-absence-limit
 @app.route('/api/class/update-absence-limit', methods=['POST'])
 def update_absence_limit():
@@ -225,6 +248,7 @@ def update_absence_limit():
     return jsonify({"message": "Absence limit updated successfully"}), 200
 
 
+# updates attendance (input: subject number, student number, status, time, date)
 @app.route('/api/update-attendance', methods=['POST'])
 def update_attendance():
     data = request.get_json()
@@ -304,6 +328,7 @@ def update_attendance():
 
     return jsonify({"message": "Status updated successfully"}), 200
 
+# deletes attendance record with given subject number, student number, date
 @app.route('/api/delete-attendance-record', methods=['POST'])
 def delete_attendance_record():
     data = request.get_json()
