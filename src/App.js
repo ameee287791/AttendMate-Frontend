@@ -10,6 +10,9 @@ import './StudentsTable.css';
 import './editAbsenceLimit.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './Register';
+import Header from './Header';
+import StudentProfile from './StudentProfile';
+import ChangePassword from './ChangePassword';
 
 function TopBar() {
     return (
@@ -18,6 +21,8 @@ function TopBar() {
                 <li><a href="/">Home</a></li>
                 <li><a href="/register">Register</a></li>
                 <li><a href="/login">Login</a></li>
+                <li><a href="/user-account">User Account</a></li>
+                <li><Header /></li>
             </ul>
         </div>
     );
@@ -49,6 +54,8 @@ function App() {
                 />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/user-account" element={<StudentProfile />} />
+                <Route path="/change-password" element={<ChangePassword />} />
             </Routes>
         </Router>
     );

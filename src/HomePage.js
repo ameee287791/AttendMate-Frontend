@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import ClassCard from './ClassCard';
-import Header from './Header';
 import { useLanguage } from './LanguageContext';
 function HomePage() {
 
@@ -19,7 +18,6 @@ function HomePage() {
 
     return (
         <div className="App">
-            <Header/>
             <h1>{t('myClasses')}</h1>
             <div className="class-list">
                 {classes.map(cls => (

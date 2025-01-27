@@ -25,8 +25,10 @@ const Login = () => {
             setToken(response.data.token);
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('isTeacher', response.data.isTeacher);
+            localStorage.setItem('email', email);
             setIsAuthenticated(true);
-            alert('Login successful!');
+            //send user to home page
+            window.location.href = '/';
         }
         catch (error) {
             alert('Login failed!');
@@ -67,6 +69,10 @@ const Login = () => {
                 <button onClick={handleLogin}>Login</button>
                 <div>
                     Don't have an account? <a href="/register">Register</a>
+                </div>
+                <div>
+                    try login with email: aliicejohnson@example.com 
+                    and password: student
                 </div>
             </div>
         );

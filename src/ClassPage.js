@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import StudentsTable from './StudentsTable';
 import EditAbsenceLimit from './editAbsenceLimit';
-import Header from './Header';
 import { useLanguage } from './LanguageContext';
 
 function ClassPage() {
@@ -35,7 +34,6 @@ function ClassPage() {
 
     return (
         <div>
-            <Header />
             <div className="header-container">
                 <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
                 <h1>

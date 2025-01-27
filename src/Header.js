@@ -7,8 +7,19 @@ function Header() {
 
     return (
         <header>
-            <div class="changeLanguage">
-                <button onClick={() => language === 'en' ? setLanguage('pl') : setLanguage('en')}>{t('changeLanguage')}</button>
+            <div className="changeLanguage">
+                <button 
+                    className={`language-button ${language === 'en' ? 'active' : ''}`} 
+                    onClick={() => setLanguage('en')}
+                >
+                    EN
+                </button>
+                <button 
+                    className={`language-button ${language === 'pl' ? 'active' : ''}`} 
+                    onClick={() => setLanguage('pl')}
+                >
+                    PL
+                </button>
             </div>
         </header>
     );
