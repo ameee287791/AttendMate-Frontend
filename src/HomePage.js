@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import ClassCard from './ClassCard';
-import Header from './Header';
 import { useLanguage } from './LanguageContext';
 function HomePage() {
 
@@ -13,7 +12,7 @@ function HomePage() {
             .then(response => response.json())
             .then(data => setClasses(data))
             .catch(error => console.error('Error fetching data: ', error));
-    })
+    }, [])
 
     //console.log("Classes: " +   classes);
 

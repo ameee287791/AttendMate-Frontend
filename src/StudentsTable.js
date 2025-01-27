@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
+import SessionTable from './SessionTable';
 
 
 function StudentsTable({ maxAbsences }) {
@@ -55,6 +56,9 @@ function StudentsTable({ maxAbsences }) {
                     ))}
                 </tbody>
             </table>
+            <SessionTable>
+                
+            </SessionTable>
         </div>
     )
 }
