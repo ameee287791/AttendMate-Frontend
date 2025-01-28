@@ -54,6 +54,7 @@ const StudentProfile = () => {
                     <h1>Student Profile</h1>
                     <p>Name: {studentData.name}</p>
                     <p>Last Name: {studentData.lastName}</p>
+                    <p>Student Number: {studentData.studentNumber}</p>
                     <button onClick={handleChangePassword}>Change Password</button>
                 </div>
             ) : (

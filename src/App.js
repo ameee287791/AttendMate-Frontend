@@ -3,7 +3,6 @@ import ClassPage from './ClassPage';
 import HomePage from './HomePage';
 import StudentPage from './StudentPage';
 import LoginPage from './LoginPage'; 
-import StudentHomepage from './StudentHomepage';
 import './HomePage.css';
 import './ClassPage.css';
 import './StudentPage.css';
@@ -57,7 +56,6 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/user-account" element={<UserAccount/>} />
                 <Route path="/change-password" element={<ChangePassword />} />
-                <Route path="/studentview" element={<StudentHomepage/> } />
             </Routes>
         </Router>
     );

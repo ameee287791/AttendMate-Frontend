@@ -32,6 +32,7 @@ const Login = () => {
         }
         catch (error) {
             alert('Login failed!');
+            console.log(error);
         }
     }
 
@@ -72,7 +73,7 @@ const Login = () => {
                     Don't have an account? <a href="/register">Register</a>
                 </div>
                 <div>
-                    try login with email: alicejohnson@example.com 
+                    try login with email: alicejohnson@example.com
                     and password: student
                 </div>
             </div>

@@ -13,7 +13,7 @@ import { useLanguage } from './LanguageContext';
 
 // date format in frontend: 09.01.2025, dd.mm.yyyy
 // date format in database: 2025-01-09, yyyy-mm-dd
-function CalendarView({ setRecalculateStats, userIsProfessor }) {
+function CalendarView({ setRecalculateStats }) {
     const { t } = useLanguage();
 
     const [date, setDate] = useState(new Date());
@@ -50,7 +50,8 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
         setDate(selectedDate);
 
         const pair = attendance.get(formattedDate);
-        console.log("pair: " + pair);
+
+        // open day with no previous entry
         if (pair == null) {
             setStatus("none");
             setHours(0);
@@ -59,6 +60,7 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
             return
         }
 
+        // open existant entry
         if (pair) {
             setStatus(pair.status);
             const time = (pair.date).split('T')[1];
@@ -73,8 +75,6 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
     // saves changes, closes edit panel
     const handleSave = async () => {
 
-        console.log("attendance: ")
-        console.log(attendance.get(dateStr));
 
         if (status === "none") { // delete from database
             const response = await fetch(`http://127.0.0.1:5000/api/delete-attendance-record`, {
@@ -91,9 +91,6 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
             console.log("Delete: " + response);
         }
 
-        console.log("data sent to update-database: subjectNumber: "
-            + classNumber + " studentNumber: " + studentNumber
-            + " date: " + dateStr + " time: " + hours + ":" + minutes + ":00 status: " + status);
         // update or create new in database
         const response = await fetch(`http://127.0.0.1:5000/api/update-attendance`, {
             method: 'POST',
@@ -112,7 +109,6 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
         console.log("Update or new:");
         console.log(response);
         const pair = attendance.get(dateStr);
-        console.log("attendance: " + pair);
 
 
         if (pair) { 
@@ -139,6 +135,7 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
         setIsPopupOpen(false);
     }
 
+    // class name for styling (color codes)
     const getTileClassName = ({ date }) => {
         const dateStr = date.toLocaleDateString('pl-PL').split('T')[0];
         const [day, month, year] = dateStr.split('.');
@@ -149,7 +146,7 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
         }
         const status = pair.status;
 
-        // note to self: pay attention to if the first letter is big or not !
+        // pay attention to if the first letter is big or not
 
         if (status === "present") return "tile-present";
         if (status === "late") return "tile-late";
@@ -158,12 +155,12 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
         return "";
     };
 
+    const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
-
-
+    // displays editing popup for teachers and info popup for students
     return (
         <div className="outer-div">
-            {isPopupOpen && userIsProfessor && (
+            {isPopupOpen && isTeacher && (
                 <div className="calendar-edit-popup">
                     <h3>{dateStr}</h3>
                     <label className="status-container">
@@ -210,7 +207,7 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
                 </div>
             )}
 
-            {isPopupOpen && !userIsProfessor && (
+            {isPopupOpen && !isTeacher && (
                 <div className="calendar-edit-popup">
                     <h3>{dateStr}</h3>
                     <label className="status-container">
@@ -222,7 +219,7 @@ function CalendarView({ setRecalculateStats, userIsProfessor }) {
                 </div>
             )}
 
-            {isPopupOpen && !userIsProfessor && status === 'late' && (
+            {isPopupOpen && !isTeacher && status === 'late' && (
                 <div className="calendar-edit-popup">
                     <h3>{dateStr}</h3>
                     <label className="status-container">

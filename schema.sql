@@ -95,7 +95,7 @@ VALUES
     ('excused');
 
 INSERT INTO user (name, lastName, email, password) 
-VALUES ('Alice', 'Johnson', 'alicejohnson@example.com', SHA2('password789', 256));
+VALUES ('Alice', 'Johnson', 'alicejohnson@example.com', '$2b$12$AYvz/FmxBDxbFkXtdi/SfuqDGAYO4ynAdwRgQZUEFoZ3ktIhyAFi.');
 
 INSERT INTO teacher (userID) 
 VALUES (LAST_INSERT_ID());

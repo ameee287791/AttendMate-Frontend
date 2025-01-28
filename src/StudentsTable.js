@@ -9,7 +9,6 @@ function StudentsTable({ maxAbsences }) {
 
     const { t } = useLanguage();
     const { classNumber } = useParams();
-    const userIsProfessor = true;
 
     const [students, setStudents] = useState([]);
 
@@ -23,9 +22,7 @@ function StudentsTable({ maxAbsences }) {
     const navigate = useNavigate();
 
     const handleTableClick = (studentNumber) => {
-        navigate(`/class/${classNumber}/student/${studentNumber}`, {
-            state: {userIsProfessor},
-        })
+        navigate(`/class/${classNumber}/student/${studentNumber}`)
     }
 
     return (
