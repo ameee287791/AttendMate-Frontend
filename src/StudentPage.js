@@ -9,32 +9,54 @@ import { useLanguage } from './LanguageContext';
 function StudentPage() {
 
     const { t } = useLanguage();
-    const { studentNumber } = useParams();
+    const { classNumber, studentNumber } = useParams();
 
     const [student, setStudent] = useState(null);
+    const [classItem, setClassItem] = useState(null);
     const [recalculateStats, setRecalculateStats] = useState(false);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/student/${studentNumber}`)
+        fetch(`http://127.0.0.1:5000/api/student/by-number/${studentNumber}`)
             .then(response => response.json())
             .then(data => setStudent(data))
             .catch(error => console.error('Error fetching data: ', error));
     }, [studentNumber])
 
-    if (!student) {
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/api/class/${classNumber}`)
+            .then(response => response.json())
+            .then(data => setClassItem(data))
+            .catch(error => console.error('Error fetching data: ', error));
+    }, [classNumber])
+
+    if (!student || !classItem) {
         return <div>Loading...</div>;
     }
 
-    console.log("Student:" + student);
+    console.log("Student: ");
+    console.log(student);
+    console.log(studentNumber);
+
+    const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
     return (
         <><div className="header-container">
         <Header/>
             <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
-            <h1>
-                {student.name} {student.lastName}
-                <span className="student-number">{studentNumber}</span>
-            </h1>
+
+            {isTeacher && (
+                <h1>
+                    {student.name} {student.lastName}
+                    <span className="student-number">{studentNumber}</span>
+                </h1>
+            )}
+
+            {!isTeacher && (
+                <h1>
+                    {classItem.subjectName}
+                    <span className="student-number">{classNumber}</span>
+                </h1>
+            )}
         </div>
             <div className="main-body">
                 <div className="legend-container">
@@ -49,7 +71,7 @@ function StudentPage() {
                 </div>
                 <div className="lower-body">
                     <div className="calendar-container">
-                        <CalendarView setRecalculateStats={setRecalculateStats} />
+                        <CalendarView setRecalculateStats={setRecalculateStats}/>
                     </div>
                     <div className="stats-container">
                         <Statistics recalculateStats={recalculateStats} setRecalculateStats={setRecalculateStats} />

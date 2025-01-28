@@ -1,24 +1,25 @@
 
 import React, { useEffect, useState } from 'react';
 import ClassCard from './ClassCard';
-import Header from './Header';
 import { useLanguage } from './LanguageContext';
+import Header from './Header';
 function HomePage() {
 
     const { t } = useLanguage();
     const [classes, setClasses] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/api/classes')
+        fetch(`http://127.0.0.1:5000/api/classes/${localStorage.getItem('isTeacher') === 'true'}/${localStorage.getItem('email') }`)
             .then(response => response.json())
             .then(data => setClasses(data))
             .catch(error => console.error('Error fetching data: ', error));
-    })
+    }, [])
 
-    //console.log("Classes: " +   classes);
+    console.log("Classes: ");
+    console.log(classes);
 
     return (
-        <div className="App">
+        <div>
             <Header/>
             <h1>{t('myClasses')}</h1>
             <div className="class-list">
