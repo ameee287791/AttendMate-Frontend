@@ -1,3 +1,5 @@
+Note: app.py is outdated, use app2.py from the backend repo instead
+
 # How to start the Frontend
 Replace the schema.sql in the backend (AttendMate-Backend/db/AttendMateDB/schema.sql) with the schema.sql from this repo. (This adds 2 columns to class table and a bunch of dummy data).
 Open Docker Desktop.
