@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import { useLanguage } from './LanguageContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -7,6 +8,7 @@ const Login = () => {
     const [message , setMessage] = useState('');
     const [token, setToken] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { t } = useLanguage();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -46,8 +48,8 @@ const Login = () => {
     if(isAuthenticated){
         return (
             <div style={{ padding: '20px' }}>
-                <h1>Login</h1>
-                <button onClick={handleLogout}>Logout</button>
+                <h1>{t('login')}</h1>
+                <button onClick={handleLogout}>{ t('logout')}</button>
                 {message && <p>{message}</p>}
             </div>
         );
@@ -55,7 +57,7 @@ const Login = () => {
     else {
         return (
             <div style={{ padding: '20px' }}>
-                <h1>Login</h1>
+                <h1>{t('login')}</h1>
                 <input
                     type="text"
                     placeholder="Email"
@@ -68,9 +70,9 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button onClick={handleLogin}>Login</button>
+                <button onClick={handleLogin}>{t('login')}</button>
                 <div>
-                    Don't have an account? <a href="/register">Register</a>
+                    {t('noAccount')} <a href="/register">{ t('register')}</a>
                 </div>
                 <div>
                     try login with email: alicejohnson@example.com

@@ -16,7 +16,7 @@ const FileUpload = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!file) return alert("Please select a file!");
+        if (!file) return alert(t('pleaseSelectFile'));
 
         const formData = new FormData();
         formData.append("file", file);
@@ -35,16 +35,16 @@ const FileUpload = () => {
             });
 
             console.log(response)
-            alert("File uploaded successfully!");
+            alert(t('fileUploaded'));
             setShowForm(false);
 
         } catch (error) {
             // Check if the error is because of invalid date
             if (error.response && error.response.data.message === 'Invalid date') {
-                alert("Please choose a date with an attendance record");
+                alert(t('chooseDateWithRecord'));
             } else {
                 console.error("Error uploading file:", error);
-                alert("Failed to upload file.");
+                alert(t('uploadFailed'));
             }
         }
 
@@ -62,17 +62,17 @@ const FileUpload = () => {
         <div>
             {!isTeacher && (
                 <button onClick={toggleForm}>
-                    Upload Doctor's Note
+                    { t('uploadNote')}
                 </button>
             )}
             {showForm && (
                 <div className="calendar-edit-popup">
-                    <h3>Upload doctor's note</h3>
+                    <h3>{t('uploadNote')}</h3>
                     <form onSubmit={handleSubmit} className="upload-form">
                         <input type="date" value={date} onChange={(e) => setDate(e.target.value) } />
                         <input type="file" accept=".pdf" onChange={handleFileChange} />
-                        <button type="submit" >Upload</button>
-                        <button onClick={toggleForm}>Cancel</button>
+                        <button type="submit" >{ t('upload')}</button>
+                        <button onClick={toggleForm}>{ t('cancel')}</button>
                     </form>
                     <div className="button-container" style={{ paddingTop: "15px" }}>
                     </div>
