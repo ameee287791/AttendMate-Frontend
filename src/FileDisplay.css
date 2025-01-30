@@ -1,0 +1,17 @@
+.file-display {
+    display: flex;
+}
+
+.file-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    cursor: pointer;
+    width: 300px;
+}
+
+.decision-buttons {
+    display: flex;
+    gap: 5px;
+}

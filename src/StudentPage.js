@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import CalendarView from './CalendarView';
 import Statistics from './Statistics';
 import Header from './Header';
+import FileUpload from './FileUpload';
 import { useLanguage } from './LanguageContext';
 
 function StudentPage() {
@@ -68,6 +69,7 @@ function StudentPage() {
                     <p>{t('absent')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#4856D4' }} />
                     <p>{t('excused')}</p>
+                    <FileUpload/>
                 </div>
                 <div className="lower-body">
                     <div className="calendar-container">

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ClassCard from './ClassCard';
 import { useLanguage } from './LanguageContext';
 import Header from './Header';
+import FileDisplay from './FileDisplay';
 function HomePage() {
 
     const { t } = useLanguage();
@@ -20,7 +21,8 @@ function HomePage() {
 
     return (
         <div>
-            <Header/>
+            <Header />
+            <FileDisplay/>
             <h1>{t('myClasses')}</h1>
             <div className="class-list">
                 {classes.map(cls => (
