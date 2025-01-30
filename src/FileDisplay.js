@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FileDisplay.css';
+import { useLanguage } from './LanguageContext';
 
 const FileDisplay = () => {
     const [data, setData] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const userMail = localStorage.getItem('email')
+    const { t } = useLanguage();
 
     // only fetches files for teachers
     const fetchFiles = async () => {
@@ -68,38 +70,38 @@ const FileDisplay = () => {
     return (
         <div>
             {Array.isArray(data) && data.length > 0 && (
-                <button onClick={toggleModal}>There is doctors notes to review</button>
+                <button onClick={toggleModal}>{t('notesToReview')}</button>
             )}
             {showModal && (
                 <div className="modal">
-                    <h3>Uploaded Files</h3>
+                    <h3>{t('doctorsNotes')}</h3>
                     <div className="file-display">
                         {Array.isArray(data) && data.length > 0 ? (
                             data.map((d, index) => (
                                 <div key={index} className="file-box">
                                     <p><strong>Student:</strong> {d.name} {d.lastName}</p>  {/* First and Last Name */}
-                                    <p><strong>Subject:</strong> {d.subjectName}</p>  {/* Subject Name */}
-                                    <p><strong>Date:</strong> {d.date}</p>  {/* Date */}
+                                    <p><strong>{t('subject')}:</strong> {d.subjectName}</p>  {/* Subject Name */}
+                                    <p><strong>{ t('date')}:</strong> {d.date}</p>  {/* Date */}
                                     <a
                                         href={`http://localhost:5000/doctors_notes/${d.filePath}`}
                                         target="_blank"  // Open the file in a new tab
                                         rel="noopener noreferrer"
                                         className="download-link"
                                     >
-                                        Doctors Note
+                                        {t('doctorsNote')}
                                     </a>
                                     <p className="decision-buttons">
-                                        <button onClick={() => acceptNote(d.excuseId)}>Accept</button>
-                                        <button onClick={() => rejectNote(d.excuseId)}>Reject</button>
+                                        <button onClick={() => acceptNote(d.excuseId)}>{t('accept')}</button>
+                                        <button onClick={() => rejectNote(d.excuseId)}>{t('reject')}</button>
                                     </p>
                                 </div>
                             ))
                         ) : (
-                            <p>No files available</p>
+                                <p>{ t('noFiles')}</p>
                         )}
 
                     </div>
-                    <button onClick={toggleModal}>Close</button>
+                    <button onClick={toggleModal}>{t('close')}</button>
                 </div>
             )}
         </div>

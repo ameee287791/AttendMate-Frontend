@@ -69,7 +69,9 @@ function StudentPage() {
                     <p>{t('absent')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#4856D4' }} />
                     <p>{t('excused')}</p>
-                    <FileUpload/>
+                    <div className="upload-container">
+                        <FileUpload/>
+                    </div>
                 </div>
                 <div className="lower-body">
                     <div className="calendar-container">

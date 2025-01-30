@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // For redirecting
 import axios from 'axios';
+import { useLanguage } from './LanguageContext';
 
 const Register = () => {
     const [email, setEmail] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate(); // Used for redirection
+    const { t } = useLanguage();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -29,7 +31,7 @@ const Register = () => {
         return (
             <div style={{ padding: '20px' }}>
                 <div>
-                    You are already logged in.
+                    { t('alreadyLoggedIn')}
                 </div>
             </div>
         )
@@ -37,9 +39,9 @@ const Register = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Register</h1>
+            <h1>{ t('register')}</h1>
             <div>
-                <div>Put your university email address below to register.</div>
+                <div>{ t('inputUniEmail')}</div>
                 <input
                     type="text"
                     placeholder="Email"
@@ -47,7 +49,7 @@ const Register = () => {
                     onChange={(e) => setEmail(e.target.value)}
                 />
             </div>
-            <button onClick={handleRegister}>Register</button>
+            <button onClick={handleRegister}>{t('register')}</button>
         </div>
     );
 };

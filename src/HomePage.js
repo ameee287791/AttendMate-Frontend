@@ -4,6 +4,7 @@ import ClassCard from './ClassCard';
 import { useLanguage } from './LanguageContext';
 import Header from './Header';
 import FileDisplay from './FileDisplay';
+import CurrentClass from './CurrentClass';
 function HomePage() {
 
     const { t } = useLanguage();
@@ -19,10 +20,15 @@ function HomePage() {
     console.log("Classes: ");
     console.log(classes);
 
+    const isTeacher = localStorage.getItem('isTeacher') === 'true';
+
     return (
         <div>
             <Header />
-            <FileDisplay/>
+            <FileDisplay />
+            {isTeacher && (
+                <CurrentClass />
+            )}
             <h1>{t('myClasses')}</h1>
             <div className="class-list">
                 {classes.map(cls => (

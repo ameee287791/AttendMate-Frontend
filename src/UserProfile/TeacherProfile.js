@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../LanguageContext';
 
 const TeacherProfile = () => {
     const [teacherData, setTeacherData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     useEffect(() => {
         const fetchTeacherData = async () => {
@@ -50,10 +52,10 @@ const TeacherProfile = () => {
         <div>
             {teacherData ? (
                 <div>
-                    <h1>Teacher Profile</h1>
-                    <p>Name: {teacherData.name}</p>
-                    <p>Last Name: {teacherData.lastName}</p>
-                    <button onClick={handleChangePassword}>Change Password</button>
+                    <h1>{t('teacherProfile')}</h1>
+                    <p>{t('firstName')}: {teacherData.name}</p>
+                    <p>{t('lastName')}: {teacherData.lastName}</p>
+                    <button onClick={handleChangePassword}>{t('changePassword')}</button>
                 </div>
             ) : (
                 <div>No teacher data found</div>
