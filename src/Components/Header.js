@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 import './Header.css';
 
 function Header() {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './FileDisplay.css';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 const FileDisplay = () => {
     const [data, setData] = useState(null);

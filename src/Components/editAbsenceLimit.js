@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
     const { t } = useLanguage();

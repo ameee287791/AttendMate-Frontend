@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // For redirecting
 import axios from 'axios';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 const Register = () => {
     const [email, setEmail] = useState('');

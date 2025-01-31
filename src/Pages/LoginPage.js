@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');

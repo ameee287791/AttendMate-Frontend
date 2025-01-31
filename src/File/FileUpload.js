@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 import { useParams } from "react-router-dom";
 
 const FileUpload = () => {

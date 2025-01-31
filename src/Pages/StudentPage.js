@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CalendarView from './CalendarView';
-import Statistics from './Statistics';
-import Header from './Header';
-import FileUpload from './FileUpload';
-import { useLanguage } from './LanguageContext';
+import CalendarView from '../Calendar/CalendarView';
+import Statistics from '../Components/Statistics';
+import Header from '../Components/Header';
+import FileUpload from '../File/FileUpload';
+import { useLanguage } from '../LanguageContext';
 
 function StudentPage() {
 

@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import './CalendarView.css';
 import './Calendar.css';
-import './EditPopup.css';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 
 // we assume that for each class, student and day only one attendance record can exist
@@ -29,16 +28,29 @@ function CalendarView({ setRecalculateStats }) {
     const { studentNumber } = useParams();
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/attendance`)
-            .then(response => response.json())
-            .then(data => {
-                const map = new Map(data.map(item => {
-                    const dateKey = item.date.split('T')[0];
-                    return [dateKey, item];
-                }));
-                setAttendance(map);
-            })
-            .catch(error => console.error('Error fetching data: ', error));
+        // Fetch function
+        const fetchData = () => {
+            fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/attendance`)
+                .then(response => response.json())
+                .then(data => {
+                    const map = new Map(data.map(item => {
+                        const dateKey = item.date.split('T')[0];
+                        return [dateKey, item];
+                    }));
+                    setAttendance(map);
+                })
+                .catch(error => console.error('Error fetching data: ', error));
+        };
+
+        // Initial fetch
+        fetchData();
+
+        // Set interval to fetch every second (1000 ms)
+        const intervalId = setInterval(fetchData, 1000);
+
+        // Cleanup on component unmount
+        return () => clearInterval(intervalId);
+
     }, [classNumber, studentNumber]);
 
     // opens edit panel for given date

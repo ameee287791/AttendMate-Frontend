@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './Statistics.css';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 function Statistics({ recalculateStats, setRecalculateStats }) {
 
     const { t } = useLanguage();
     const { classNumber, studentNumber } = useParams();
     const [lateTime, setLateTime] = useState(0);
-    const [timesInClass, setTimesInClass] = useState(0);
+    const [timesInClass, setTimesInClass] = useState(0); // late or present
     const [timesLate, setTimesLate] = useState(0);
-    const [missedClasses, setMissedClasses] = useState(0);
-    const [timesUnexcused, setTimesUnexcused] = useState(0);
+    const [missedClasses, setMissedClasses] = useState(0); // absent or excused
+    const [timesUnexcused, setTimesUnexcused] = useState(0); // absent
 
     const [classItem, setClassItem] = useState(null);
 
@@ -59,6 +59,9 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
         lateTimeOverLateClasses = convertSecondsToTime(lateTime / timesLate);
     }
 
+    const totalClasses = timesInClass + missedClasses;
+    const attendancePercentage = ((timesInClass / totalClasses) * 100).toFixed(2); // max 2 decimal places
+
     if (!classItem) {
         return <div>Loading...</div>;
     }
@@ -82,6 +85,7 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
                     <p>{t('averageAttended')}: {lateTimeOverClasses}</p>
                     <p>{t('averageLate')}: {lateTimeOverLateClasses}</p>
                     <p>{t('totalMissed')}: {missedClasses}</p>
+                    <p>{t('attendancePercentage')}: {attendancePercentage}%</p>
                     <span style={{ color: timesUnexcused > classItem.absenceLimit ? 'red' : 'green' }}>
                         {t('totalUnexcused')}: {timesUnexcused} ({t('outOfMax1')} {classItem.absenceLimit} {t('outOfMax2')})
                     </span>

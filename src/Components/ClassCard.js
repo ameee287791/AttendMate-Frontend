@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import './HomePage.css';
+import '../Pages/HomePage.css';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 
 function ClassCard({ name, number, type }) {
