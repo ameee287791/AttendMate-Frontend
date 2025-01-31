@@ -17,11 +17,19 @@ function StudentPage() {
     const [recalculateStats, setRecalculateStats] = useState(false);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/student/by-number/${studentNumber}`)
-            .then(response => response.json())
-            .then(data => setStudent(data))
-            .catch(error => console.error('Error fetching data: ', error));
-    }, [studentNumber])
+        const token = localStorage.getItem('token'); // Retrieve token from storage
+    
+        fetch(`http://127.0.0.1:5000/api/student/by-number/${studentNumber}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Send JWT token
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => setStudent(data))
+        .catch(error => console.error('Error fetching data: ', error));
+    }, [studentNumber]);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:5000/api/class/${classNumber}`)
