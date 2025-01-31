@@ -14,9 +14,16 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
     const [timesUnexcused, setTimesUnexcused] = useState(0); // absent
 
     const [classItem, setClassItem] = useState(null);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/statistics`)
+        fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/statistics`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Send JWT token
+                "Content-Type": "application/json"
+            }
+    })
             .then(response => response.json())
             .then(data => {
                 setLateTime(data.lateTime);
