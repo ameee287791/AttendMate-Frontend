@@ -1,0 +1,62 @@
+/* TeacherProfile.css */
+.teacher-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f4f7fc;
+}
+
+.profile-details {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.profile-heading {
+    font-size: 26px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.profile-details p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #4c9aff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #3878c2;
+}
+
+.loading, .error-message {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f44336;
+    text-align: center;
+}
+
+.no-data {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+}
