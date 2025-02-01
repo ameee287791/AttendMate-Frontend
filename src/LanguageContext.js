@@ -71,7 +71,8 @@ const translations = {
         uploadFailed: "Failed to upload file",
         uploadNote: "Upload Doctors Note",
         currentClass: "Current Class",
-        haveAccount: "Already have an account?"
+        haveAccount: "Already have an account?",
+        notYet: "Future"
     },
 
 
@@ -144,7 +145,8 @@ const translations = {
         uploadFailed: "Przesyłanie pliku nie powiodło się",
         uploadNote: "Prześlij zwolnienie lekarskie",
         currentClass: "Obecne zajęcia",
-        haveAccount: "Masz juz konto?"
+        haveAccount: "Masz juz konto?",
+        notYet: "Zajęcia się jeszcze nie odbyły"
 
     },
 };

@@ -187,6 +187,10 @@
     background-color: #4856D4;
 }
 
+.react-calendar__tile.tile-not-yet::before{
+    background-color: lightgray;
+}
+
 .react-calendar__tile {
     border-radius: 10px;
 

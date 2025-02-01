@@ -52,10 +52,9 @@ function CalendarView({ setRecalculateStats }) {
                     .catch(error => console.error('Error fetching data: ', error));
             };
         
-            // Initial fetch
             fetchData();
         
-        }, [classNumber, studentNumber]); // Removed forbidden & setInterval
+        }, [classNumber, studentNumber]);
 
         
     if (forbidden) {
@@ -164,7 +163,7 @@ function CalendarView({ setRecalculateStats }) {
             return "";
         }
         const status = pair.status;
-
+        if (status == null) return "tile-not-yet";
         if (status === "present") return "tile-present";
         if (status === "late") return "tile-late";
         if (status === "absent") return "tile-absent";
