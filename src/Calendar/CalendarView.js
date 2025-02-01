@@ -119,23 +119,33 @@ function CalendarView({ setRecalculateStats }) {
         }
 
         // update or create new in database
-        const response = await fetch(`http://127.0.0.1:5000/api/update-attendance`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                subjectNumber: classNumber,
-                studentNumber: studentNumber,
-                date: dateStr,
-                time: hours + ":" + minutes + ":00",
-                status: status
-            }),
-        });
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/api/update-attendance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    subjectNumber: classNumber,
+                    studentNumber: studentNumber,
+                    date: dateStr,
+                    time: hours + ":" + minutes + ":00",
+                    status: status
+                }),
+            });
 
-        console.log("Update or new:");
-        console.log(response);
+            // Parse the JSON response
+            const data = await response.json();
+
+            // Check for the specific error message
+            if (data.message === "Time is null") {
+                alert("Please put in a time");
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+
         const pair = attendance.get(dateStr);
 
         if (pair) {
