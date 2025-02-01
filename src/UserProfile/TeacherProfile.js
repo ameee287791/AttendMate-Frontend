@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../LanguageContext';
+import './TeacherProfile.css'; // Import the CSS file
 
 const TeacherProfile = () => {
     const [teacherData, setTeacherData] = useState(null);
@@ -41,24 +42,24 @@ const TeacherProfile = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="loading">{t('loading')}...</div>;
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div className="error-message">Error: {error}</div>;
     }
 
     return (
-        <div>
+        <div className="teacher-profile-container">
             {teacherData ? (
-                <div>
-                    <h1>{t('teacherProfile')}</h1>
-                    <p>{t('firstName')}: {teacherData.name}</p>
-                    <p>{t('lastName')}: {teacherData.lastName}</p>
-                    <button onClick={handleChangePassword}>{t('changePassword')}</button>
+                <div className="profile-details">
+                    <h1 className="profile-heading">{t('teacherProfile')}</h1>
+                    <p><strong>{t('firstName')}:</strong> {teacherData.name}</p>
+                    <p><strong>{t('lastName')}:</strong> {teacherData.lastName}</p>
+                    <button onClick={handleChangePassword} className="change-password-button">{t('changePassword')}</button>
                 </div>
             ) : (
-                <div>No teacher data found</div>
+                <div className="no-data">{t('noTeacherData')}</div>
             )}
         </div>
     );

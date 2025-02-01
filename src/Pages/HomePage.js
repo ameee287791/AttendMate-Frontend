@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../Components/ClassCard';
 import { useLanguage } from '../LanguageContext';
-import Header from '../Components/Header';
 import FileDisplay from '../File/FileDisplay';
 import CurrentClass from '../Components/CurrentClass';
 function HomePage() {
@@ -24,7 +23,6 @@ function HomePage() {
 
     return (
         <div>
-            <Header />
             <FileDisplay />
             {isTeacher && (
                 <CurrentClass />

@@ -70,7 +70,9 @@ const translations = {
         chooseDateWithRecord: "Please choose a date with an attendance record",
         uploadFailed: "Failed to upload file",
         uploadNote: "Upload Doctors Note",
-        currentClass: "Current Class"
+        currentClass: "Current Class",
+        haveAccount: "Already have an account?",
+        notYet: "Future"
     },
 
 
@@ -142,7 +144,9 @@ const translations = {
         chooseDateWithRecord: "Proszę wybrać datę z listą obecności",
         uploadFailed: "Przesyłanie pliku nie powiodło się",
         uploadNote: "Prześlij zwolnienie lekarskie",
-        currentClass: "Obecne zajęcia"
+        currentClass: "Obecne zajęcia",
+        haveAccount: "Masz juz konto?",
+        notYet: "Zajęcia się jeszcze nie odbyły"
 
     },
 };

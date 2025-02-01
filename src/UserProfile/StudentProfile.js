@@ -50,14 +50,14 @@ const StudentProfile = () => {
         return <div>Error: {error}</div>;
     }
     return (
-        <div>
+        <div className="teacher-profile-container">
             {studentData ? (
-                <div>
-                    <h1>{t('studentProfile')}</h1>
+                <div className='profile-details'>
+                    <h1 className='profile-heading'>{t('studentProfile')}</h1>
                     <p>{t('firstName')}: {studentData.name}</p>
                     <p>{t('lastName')}: {studentData.lastName}</p>
                     <p>{t('number')}: {studentData.studentNumber}</p>
-                    <button onClick={handleChangePassword}>{t('changePassword')}</button>
+                    <button className="change-password-button" onClick={handleChangePassword}>{t('changePassword')}</button>
                 </div>
             ) : (
                 <div>No student data found</div>

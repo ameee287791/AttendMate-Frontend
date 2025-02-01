@@ -77,6 +77,8 @@ function StudentPage() {
                     <p>{t('absent')}</p>
                     <div className="legend-cube" style={{ backgroundColor: '#4856D4' }} />
                     <p>{t('excused')}</p>
+                    <div className="legend-cube" style={{ backgroundColor: 'lightgray' }} />
+                    <p>{t('notYet')}</p>
                     <div className="upload-container">
                         <FileUpload/>
                     </div>
