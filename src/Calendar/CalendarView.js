@@ -25,45 +25,39 @@ function CalendarView({ setRecalculateStats }) {
         const token = localStorage.getItem('token');
 
         // Fetch function with token in headers
-        const fetchData = () => {
-            fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/attendance`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(response => {
-                    if (response.status === 403) {
-                        // Set forbidden state if access is denied
-                        setForbidden(true);
-                        return [];
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (!forbidden) { // Only process data if not forbidden
-                        const map = new Map(data.map(item => {
-                            const dateKey = item.date.split('T')[0];
-                            return [dateKey, item];
-                        }));
-                        setAttendance(map);
+            const fetchData = () => {
+                fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/attendance`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     }
                 })
-                .catch(error => console.error('Error fetching data: ', error));
-        };
+                    .then(response => {
+                        if (response.status === 403) {
+                            // Set forbidden state if access is denied
+                            setForbidden(true);
+                            return [];
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (!forbidden) { // Only process data if not forbidden
+                            const map = new Map(data.map(item => {
+                                const dateKey = item.date.split('T')[0];
+                                return [dateKey, item];
+                            }));
+                            setAttendance(map);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data: ', error));
+            };
+        
+            // Initial fetch
+            fetchData();
+        
+        }, [classNumber, studentNumber]); // Removed forbidden & setInterval
 
-        // Initial fetch
-        fetchData();
-
-        // Set interval to fetch every second (1000 ms)
-        const intervalId = setInterval(fetchData, 1000);
-
-        // Cleanup on component unmount
-        return () => clearInterval(intervalId);
-
-    }, [classNumber, studentNumber, forbidden]);
-
-    // If forbidden, do not display anything
+        
     if (forbidden) {
         return <div></div>;
     }
