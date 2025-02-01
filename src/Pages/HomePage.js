@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import ClassCard from './ClassCard';
-import { useLanguage } from './LanguageContext';
-import Header from './Header';
-import FileDisplay from './FileDisplay';
-import CurrentClass from './CurrentClass';
+import ClassCard from '../Components/ClassCard';
+import { useLanguage } from '../LanguageContext';
+import Header from '../Components/Header';
+import FileDisplay from '../File/FileDisplay';
+import CurrentClass from '../Components/CurrentClass';
 function HomePage() {
 
     const { t } = useLanguage();

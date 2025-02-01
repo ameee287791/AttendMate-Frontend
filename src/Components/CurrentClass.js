@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 
 
 function CurrentClass() {

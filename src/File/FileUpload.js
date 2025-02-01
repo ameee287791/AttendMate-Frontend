@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from '../LanguageContext';
 import { useParams } from "react-router-dom";
 
 const FileUpload = () => {
@@ -23,6 +23,8 @@ const FileUpload = () => {
 
         console.log(classNumber);
 
+        const token = localStorage.getItem('token');
+
         try {
             const formData = new FormData();
             formData.append("file", file);
@@ -31,7 +33,9 @@ const FileUpload = () => {
             formData.append("subjectNumber", classNumber);
 
             const response = await axios.post("http://localhost:5000/upload-file", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${token}`,                },
             });
 
             console.log(response)
@@ -39,8 +43,9 @@ const FileUpload = () => {
             setShowForm(false);
 
         } catch (error) {
-            // Check if the error is because of invalid date
-            if (error.response && error.response.data.message === 'Invalid date') {
+            if (error.response && error.response.status === 403) {
+                alert("access forbidden");
+            } else if (error.response && error.response.data.message === 'Invalid date') {
                 alert(t('chooseDateWithRecord'));
             } else {
                 console.error("Error uploading file:", error);
