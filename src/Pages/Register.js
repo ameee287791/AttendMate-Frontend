@@ -39,7 +39,7 @@ const Register = () => {
     return (
         <div className="auth-container">
             <div className="form-group">
-                <h1>{t('register')}</h1>
+                <h1 class="big-text">{t('register')}</h1>
                 <div className="form-group">
                     <label className="form-label">{t('inputUniEmail')}</label>
                     <input

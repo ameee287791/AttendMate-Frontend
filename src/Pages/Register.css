@@ -17,7 +17,7 @@
     max-width: 400px;
 }
 
-h1 {
+.big-text {
     text-align: center;
     font-size: 24px;
     font-weight: 600;
@@ -63,13 +63,6 @@ h1 {
 
 .submit-button:hover {
     background-color: #3878c2;
-}
-
-p {
-    text-align: center;
-    color: green;
-    font-size: 14px;
-    margin-top: 20px;
 }
 
 .account-link {

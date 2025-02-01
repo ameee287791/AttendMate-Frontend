@@ -32,21 +32,6 @@
     margin-bottom: 10px;
 }
 
-button {
-    background-color: #4c9aff;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #3878c2;
-}
-
 .loading, .error-message {
     font-size: 18px;
     font-weight: bold;
