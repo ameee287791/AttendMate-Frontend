@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../LanguageContext';
 
 const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
@@ -7,6 +7,27 @@ const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
 
     const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
     const [newMaxAbsences, setNewMaxAbsences] = useState(maxAbsences);
+    const [isValidTeacher, setIsValidTeacher] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        fetch(`http://127.0.0.1:5000/api/is-teacher-of-class/${classNumber}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Send JWT token
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setIsValidTeacher(data);
+            })
+            .catch(error => console.error('Error fetching data: ', error));
+
+    }, [classNumber])
+
+    console.log(isValidTeacher);
 
     const handleEditClick = () => {
         setNewMaxAbsences("");
@@ -29,17 +50,21 @@ const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
             absenceLimit: newMaxAbsences,
         });
 
+        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
         const response = await fetch('http://127.0.0.1:5000/api/class/update-absence-limit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-
+                'Authorization': `Bearer ${token}` // Include JWT token in the request
             },
             body: JSON.stringify({
                 subjectNumber: classNumber,
                 absenceLimit: newMaxAbsences,
             }),
         });
+
+
 
         console.log(response);
 
@@ -52,6 +77,10 @@ const EditAbsenceLimit = ({ maxAbsences, setMaxAbsences, classNumber }) => {
 
     if (maxAbsences == null) {
         return <div>Loading...</div>;
+    }
+
+    if (isValidTeacher === false) {
+        return <div></div>
     }
 
     return (

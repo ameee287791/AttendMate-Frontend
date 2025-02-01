@@ -13,16 +13,31 @@ function StudentsTable({ maxAbsences }) {
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/students/${classNumber}`)
+        const token = localStorage.getItem('token');
+
+        fetch(`http://127.0.0.1:5000/api/students/${classNumber}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`, // Send JWT token
+                "Content-Type": "application/json"
+            }
+        })
             .then(response => response.json())
-            .then(data => setStudents(data))
+            .then(data => {
+                setStudents(data);
+            })
             .catch(error => console.error('Error fetching data: ', error));
+
     }, [classNumber])
 
     const navigate = useNavigate();
 
     const handleTableClick = (studentNumber) => {
         navigate(`/class/${classNumber}/student/${studentNumber}`)
+    }
+
+    if (students === null || students.length === 0) {
+        return null;
     }
 
     return (
@@ -42,8 +57,8 @@ function StudentsTable({ maxAbsences }) {
                         <tr key={student.studentID}
                             onClick={() => handleTableClick(student.studentNumber)}
                             style={{
-                            color: student.absences > maxAbsences ? 'red' : 'black',
-                        }}>
+                                color: student.absences > maxAbsences ? 'red' : 'black',
+                            }}>
                             <td>{student.studentNumber}</td>
                             <td>{student.lastName}</td>
                             <td>{student.name}</td>
@@ -54,7 +69,7 @@ function StudentsTable({ maxAbsences }) {
                 </tbody>
             </table>
             <SessionTable>
-                
+
             </SessionTable>
         </div>
     )

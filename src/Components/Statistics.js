@@ -4,7 +4,6 @@ import './Statistics.css';
 import { useLanguage } from '../LanguageContext';
 
 function Statistics({ recalculateStats, setRecalculateStats }) {
-
     const { t } = useLanguage();
     const { classNumber, studentNumber } = useParams();
     const [lateTime, setLateTime] = useState(0);
@@ -12,38 +11,70 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
     const [timesLate, setTimesLate] = useState(0);
     const [missedClasses, setMissedClasses] = useState(0); // absent or excused
     const [timesUnexcused, setTimesUnexcused] = useState(0); // absent
-
     const [classItem, setClassItem] = useState(null);
+    const [forbidden, setForbidden] = useState(false);
+
     const token = localStorage.getItem('token');
 
     useEffect(() => {
+        // Fetch statistics data with token in headers
         fetch(`http://127.0.0.1:5000/api/class/${classNumber}/student/${studentNumber}/statistics`, {
             method: "GET",
             headers: {
-                "Authorization": `Bearer ${token}`, // Send JWT token
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             }
-    })
-            .then(response => response.json())
-            .then(data => {
-                setLateTime(data.lateTime);
-                setTimesInClass(data.timesInClass);
-                setTimesLate(data.timesLate);
-                setMissedClasses(data.missedClasses);
-                setTimesUnexcused(data.timesUnexcused);
-                setRecalculateStats(false);
+        })
+            .then(response => {
+                if (response.status === 403) {
+                    setForbidden(true);
+                    return null;
+                }
+                return response.json();
             })
-            .catch(error => console.error('Error fetching data: ', error));
-        fetch(`http://127.0.0.1:5000/api/class/${classNumber}`)
-            .then(response => response.json())
-            .then(data => setClassItem(data))
-            .catch(error => console.error('Error fetching data: ', error));
-    }, [classNumber, studentNumber, recalculateStats])
+            .then(data => {
+                if (data) {
+                    setLateTime(data.lateTime);
+                    setTimesInClass(data.timesInClass);
+                    setTimesLate(data.timesLate);
+                    setMissedClasses(data.missedClasses);
+                    setTimesUnexcused(data.timesUnexcused);
+                    setRecalculateStats(false);
+                }
+            })
+            .catch(error => console.error('Error fetching statistics: ', error));
 
+        // Fetch class item (for subject details)
+        fetch(`http://127.0.0.1:5000/api/class/${classNumber}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                if (response.status === 403) {
+                    setForbidden(true);
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    setClassItem(data);
+                }
+            })
+            .catch(error => console.error('Error fetching class data: ', error));
+    }, [classNumber, studentNumber, recalculateStats, setRecalculateStats, token]);
+
+    if (forbidden) {
+        return <div>Not allowed</div>;
+    }
+
+    // Utility functions to convert time formats
     const convertTimeToSeconds = (time) => {
         const [hours, minutes, seconds] = time.split(':').map(Number);
         return hours * 3600 + minutes * 60 + seconds;
-    }
+    };
 
     const convertSecondsToTime = (seconds) => {
         seconds = Math.round(seconds);
@@ -51,12 +82,12 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
+    };
 
     console.log(lateTime);
 
-    var lateTimeOverClasses = 0;
-    var lateTimeOverLateClasses = 0;
+    let lateTimeOverClasses = "";
+    let lateTimeOverLateClasses = "";
 
     if (timesInClass > 0) {
         lateTimeOverClasses = convertSecondsToTime(lateTime / timesInClass);
@@ -67,7 +98,7 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
     }
 
     const totalClasses = timesInClass + missedClasses;
-    const attendancePercentage = ((timesInClass / totalClasses) * 100).toFixed(2); // max 2 decimal places
+    const attendancePercentage = totalClasses > 0 ? ((timesInClass / totalClasses) * 100).toFixed(2) : 0;
 
     if (!classItem) {
         return <div>Loading...</div>;
@@ -79,7 +110,7 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
             <div className="statistics-container">
                 <div className="class-info">
                     <p>
-                        {t('year')}: {classItem.year}<br/>
+                        {t('year')}: {classItem.year}<br />
                         {t('semester')}: {classItem.semester}<br />
                         {t('room')}: {classItem.room}<br />
                         {t('day')}: {t(classItem.day)} <br />
@@ -99,9 +130,7 @@ function Statistics({ recalculateStats, setRecalculateStats }) {
                 </div>
             </div>
         </div>
-
-
-    )
+    );
 }
 
 export default Statistics;

@@ -12,10 +12,12 @@ const FileDisplay = () => {
 
     // only fetches files for teachers
     const fetchFiles = async () => {
+        const token = localStorage.getItem('token');
         try {
             const response = await axios.get('http://localhost:5000/list-files', {
-                params: {
-                    userMail: userMail
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 }
             });
             setData(response.data);
@@ -37,11 +39,14 @@ const FileDisplay = () => {
         return <div></div>
     }
 
-    const acceptNote = async(note_id) => {
+    const acceptNote = async (note_id) => {
+        const token = localStorage.getItem('token');
+
         const response = await fetch(`http://127.0.0.1:5000/doctors_note/decide/${"accept"}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
                 excuseId: note_id
@@ -52,11 +57,14 @@ const FileDisplay = () => {
         fetchFiles();
     }
 
-    const rejectNote = async(note_id) => {
+    const rejectNote = async (note_id) => {
+        const token = localStorage.getItem('token');
+
         const response = await fetch(`http://127.0.0.1:5000/doctors_note/decide/${'reject'}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
                 excuseId: note_id
@@ -66,6 +74,27 @@ const FileDisplay = () => {
         console.log(response);
         fetchFiles();
     }
+
+    const openFile = async (filePath) => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`http://localhost:5000/doctors_notes/${filePath}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) {
+                console.error('Failed to fetch file:', response.status);
+                return;
+            }
+            const blob = await response.blob();
+            const fileURL = URL.createObjectURL(blob);
+            window.open(fileURL, '_blank');
+        } catch (error) {
+            console.error('Error opening file:', error);
+        }
+    };
+
 
     return (
         <div>
@@ -82,14 +111,12 @@ const FileDisplay = () => {
                                     <p><strong>Student:</strong> {d.name} {d.lastName}</p>  {/* First and Last Name */}
                                     <p><strong>{t('subject')}:</strong> {d.subjectName}</p>  {/* Subject Name */}
                                     <p><strong>{ t('date')}:</strong> {d.date}</p>  {/* Date */}
-                                    <a
-                                        href={`http://localhost:5000/doctors_notes/${d.filePath}`}
-                                        target="_blank"  // Open the file in a new tab
-                                        rel="noopener noreferrer"
+                                    <button
+                                        onClick={() => openFile(d.filePath)}
                                         className="download-link"
                                     >
                                         {t('doctorsNote')}
-                                    </a>
+                                    </button>
                                     <p className="decision-buttons">
                                         <button onClick={() => acceptNote(d.excuseId)}>{t('accept')}</button>
                                         <button onClick={() => rejectNote(d.excuseId)}>{t('reject')}</button>
