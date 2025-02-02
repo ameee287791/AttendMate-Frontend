@@ -22,7 +22,7 @@ function HomePage() {
     const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
     return (
-        <div>
+        <div class ="home-container">
             <FileDisplay />
             {isTeacher && (
                 <CurrentClass />

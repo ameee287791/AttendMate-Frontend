@@ -39,7 +39,7 @@ function ClassPage() {
     console.log("Class Type: " + classNumber);
 
     return (
-        <div>
+        <div className='home-container'>
             <div className="header-container">
                 <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
                 <h1>

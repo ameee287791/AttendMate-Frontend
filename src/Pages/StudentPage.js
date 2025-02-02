@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CalendarView from '../Calendar/CalendarView';
 import Statistics from '../Components/Statistics';
-import Header from '../Components/Header';
 import FileUpload from '../File/FileUpload';
 import { useLanguage } from '../LanguageContext';
 
@@ -49,8 +48,9 @@ function StudentPage() {
     const isTeacher = localStorage.getItem('isTeacher') === 'true';
 
     return (
-        <><div className="header-container">
-        <Header/>
+        <>
+        <div className='home-container'>
+        <div className="header-container">
             <button className="back-button" onClick={() => window.history.back()}>&#129144;</button>
 
             {isTeacher && (
@@ -67,7 +67,7 @@ function StudentPage() {
                 </h1>
             )}
         </div>
-            <div className="main-body">
+            <div className="main-body ">
                 <div className="legend-container">
                     <div className="legend-cube" style={{ backgroundColor: '#4CAF50' }} />
                     <p>{t('present')}</p>
@@ -91,7 +91,9 @@ function StudentPage() {
                         <Statistics recalculateStats={recalculateStats} setRecalculateStats={setRecalculateStats} />
                     </div>
                 </div>
-            </div></>
+            </div>
+            </div>
+            </>
     );
 }
 
