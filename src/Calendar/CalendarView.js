@@ -112,23 +112,33 @@ function CalendarView({ setRecalculateStats }) {
         }
 
         // update or create new in database
-        const response = await fetch(`http://127.0.0.1:5000/api/update-attendance`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-                subjectNumber: classNumber,
-                studentNumber: studentNumber,
-                date: dateStr,
-                time: hours + ":" + minutes + ":00",
-                status: status
-            }),
-        });
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/api/update-attendance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    subjectNumber: classNumber,
+                    studentNumber: studentNumber,
+                    date: dateStr,
+                    time: hours + ":" + minutes + ":00",
+                    status: status
+                }),
+            });
 
-        console.log("Update or new:");
-        console.log(response);
+            // Parse the JSON response
+            const data = await response.json();
+
+            // Check for the specific error message
+            if (data.message === "Time is null") {
+                alert("Please put in a time");
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+        }
+
         const pair = attendance.get(dateStr);
 
         if (pair) {
@@ -159,15 +169,17 @@ function CalendarView({ setRecalculateStats }) {
         const [day, month, year] = dateStr.split('.');
         const formattedDate = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
         const pair = attendance.get(formattedDate);
+
         if (pair == null) {
             return "";
         }
         const status = pair.status;
+
         if (status == null) return "tile-not-yet";
-        if (status === "present") return "tile-present";
-        if (status === "late") return "tile-late";
-        if (status === "absent") return "tile-absent";
-        if (status === "excused") return "tile-excused";
+        if (status === "present" || status === 1) return "tile-present";
+        if (status === "late" || status === 3) return "tile-late";
+        if (status === "absent" || status === 2) return "tile-absent";
+        if (status === "excused" || status === 4) return "tile-excused";
         return "";
     };
 
