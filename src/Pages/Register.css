@@ -2,7 +2,7 @@
 .auth-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding: 20px;
     min-height: 100vh;
     background-color: #f7fafc;
     font-family: 'Arial', sans-serif;
