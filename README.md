@@ -10,9 +10,9 @@ If you made changes to the schema.sql, run
 ### `docker compose down -v`
 ### `docker compose up -d --build --force-recreate`
 
-app.py will likely run into an error, because it couldn't connect to the database, restart app.py.
+app2.py will likely run into an error, because it couldn't connect to the database, restart app2.py.
 
-
+Note: schema.sql and the flask folder in the frontend repo are not used anymore.
 
 
 
