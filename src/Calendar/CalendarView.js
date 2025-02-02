@@ -169,15 +169,17 @@ function CalendarView({ setRecalculateStats }) {
         const [day, month, year] = dateStr.split('.');
         const formattedDate = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
         const pair = attendance.get(formattedDate);
+
         if (pair == null) {
             return "";
         }
         const status = pair.status;
+
         if (status == null) return "tile-not-yet";
-        if (status === "present") return "tile-present";
-        if (status === "late") return "tile-late";
-        if (status === "absent") return "tile-absent";
-        if (status === "excused") return "tile-excused";
+        if (status === "present" || status === 1) return "tile-present";
+        if (status === "late" || status === 3) return "tile-late";
+        if (status === "absent" || status === 2) return "tile-absent";
+        if (status === "excused" || status === 4) return "tile-excused";
         return "";
     };
 

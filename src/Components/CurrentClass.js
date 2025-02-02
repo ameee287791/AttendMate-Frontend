@@ -22,7 +22,9 @@ function CurrentClass() {
     const className = students[0].subjectName;
     const classNumber = students[0].subjectNumber;
     const handleTableClick = (studentNumber) => {
-        navigate(`/class/${classNumber}/student/${studentNumber}`)
+        if (classNumber) {
+            navigate(`/class/${classNumber}/student/${studentNumber}`)
+        }
     }
 
     return (
